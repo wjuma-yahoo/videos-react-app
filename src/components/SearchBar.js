@@ -13,7 +13,7 @@ export const SearchBar = ({ onCatchFormSubmitted }) => {
     <div className="ui segment">
       <form onSubmit={handleOnFormSubmit} className='ui form'>
         <div className='field'>
-          <label className=''>Video Search</label>
+          <label className=''>Buscar Videos</label>
           <input 
             onChange={(e) => setTerm(e.target.value)}
             value={term}
