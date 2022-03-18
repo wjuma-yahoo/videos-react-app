@@ -1,49 +1,38 @@
-import React from 'react'
-import { SearchBar } from './SearchBar'
+import React, { useEffect, useState } from 'react';
 
-import youtube from '../api/youtube';
+// Components
 import VideoList from './VideoList';
+import { SearchBar } from './SearchBar';
 import { VideoDetail } from './VideoDetail';
 
-export class App extends React.Component {
+// Hooks
+import { useVideo } from '../hooks/useVideo';
 
-  state = { videos: [], videoSelected: null }
 
-  componentDidMount() {
-    this.catchFormSubmited("nicoang");
-  }
+export const App = () => {
 
-  catchFormSubmited = async (term) => {
-    const response = await youtube.get('/search', {
-      params: {
-        q: term
-      }
-    });
-    this.setState({ 
-      videos: response.data.items,
-      videoSelected: response.data.items[0] 
-    });
-  }
+  const [videos, catchFormSubmitted] = useVideo('nicoang');
+  const [videoSelected, setVideoSelected] = useState(null);
 
-  onVideoSelect = video => {
-    this.setState({ videoSelected: video });
-  }
+  useEffect(() => {
+    setVideoSelected(videos[0]);
+  }, [videos]);
 
-  render() {
-    return (
-      <div className='ui container' style={{ marginTop: '25px' }}>
-          <SearchBar onCatchFormSubmited={this.catchFormSubmited} />
-          <div className='ui grid'>
-            <div className='ui row'>
-              <div className='eleven wide column'>
-                <VideoDetail video={this.state.videoSelected} />
-              </div>
-              <div className='five wide column'>
-                <VideoList onVideoSelect={this.onVideoSelect} videos={this.state.videos}/>
-              </div>
+  return (
+    <div className='ui container' style={{ marginTop: '25px' }}>
+        <SearchBar onCatchFormSubmitted={catchFormSubmitted} />
+        <div className='ui grid'>
+          <div className='ui row'>
+            <div className='eleven wide column'>
+              <VideoDetail video={videoSelected} />
+            </div>
+            <div className='five wide column'>
+              <VideoList onVideoSelect={setVideoSelected} videos={videos}/>
             </div>
           </div>
-      </div>
-    )
-  }
+        </div>
+    </div>
+  )
+
 }
+
